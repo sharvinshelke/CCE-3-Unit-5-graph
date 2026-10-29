@@ -41,13 +41,13 @@ Installation costs must be non-negative.
 
 7. Sample Input
 
-4
-5
-1 2 10
-1 3 6
-1 4 5
-2 4 15
-3 4 4
+4.
+5.
+1, 2, 10.
+1, 3, 6.
+1, 4, 5.
+2, 4, 15.
+3, 4, 4.
 
 8. Sample Output
 
