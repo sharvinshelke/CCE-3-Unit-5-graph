@@ -41,7 +41,7 @@ Installation costs must be non-negative.
 
 7. Sample Input
 
-4  
+4
 5
 1 2 10
 1 3 6
