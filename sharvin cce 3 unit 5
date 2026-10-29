@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct Edge {
+    int source, destination, cost;
+};
+
+bool compareEdges(Edge a, Edge b) {
+    return a.cost < b.cost;
+}
+
+class DSU {
+    vector<int> parent, rankValue;
+
+public:
+    DSU(int n) {
+        parent.resize(n);
+        rankValue.resize(n, 0);
+
+        for (int i = 0; i < n; i++)
+            parent[i] = i;
+    }
+
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    bool unite(int a, int b) {
+        a = find(a);
+        b = find(b);
+
+        if (a == b)
+            return false;
+
+        if (rankValue[a] < rankValue[b])
+            swap(a, b);
+
+        parent[b] = a;
+
+        if (rankValue[a] == rankValue[b])
+            rankValue[a]++;
+
+        return true;
+    }
+};
+
+int main() {
+    int n, m;
+
+    cout << "Enter number of industrial sensors: ";
+    cin >> n;
+
+    cout << "Enter number of possible wiring connections: ";
+    cin >> m;
+
+    if (n <= 0 || m < 0) {
+        cout << "Invalid input!\n";
+        return 0;
+    }
+
+    vector<Edge> edges(m);
+
+    cout << "Enter source, destination and cost for each connection:\n";
+
+    for (int i = 0; i < m; i++) {
+        cin >> edges[i].source
+            >> edges[i].destination
+            >> edges[i].cost;
+
+        if (edges[i].source < 1 || edges[i].source > n ||
+            edges[i].destination < 1 ||
+            edges[i].destination > n ||
+            edges[i].cost < 0) {
+            cout << "Invalid connection data!\n";
+            return 0;
+        }
+
+        edges[i].source--;
+        edges[i].destination--;
+    }
+
+    sort(edges.begin(), edges.end(), compareEdges);
+
+    DSU dsu(n);
+    long long totalCost = 0;
+    int selected = 0;
+
+    cout << "\nMinimum-cost wiring connections:\n";
+
+    for (const Edge &e : edges) {
+        if (dsu.unite(e.source, e.destination)) {
+            cout << "Sensor " << e.source + 1
+                 << " - Sensor " << e.destination + 1
+                 << " : Cost = " << e.cost << "\n";
+
+            totalCost += e.cost;
+            selected++;
+
+            if (selected == n - 1)
+                break;
+        }
+    }
+
+    if (selected != n - 1) {
+        cout << "Cannot connect all sensors with the given connections.\n";
+    } else {
+        cout << "\nMinimum Total Installation Cost = "
+             << totalCost << "\n";
+    }
+
+    return 0;
+}
